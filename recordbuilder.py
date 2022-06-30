@@ -182,6 +182,9 @@ def domainkeys(domain, keytype, key, ttl):
         keytype -- should be 'rsa'
         key -- the public key
         ttl -- time to live (int)
+
+    Newlines (\\n) and carriage returns (\\r) are removed automatically from
+    the key.
     """
     key = key.replace('\n', '')
     key = key.replace('\r', '')
