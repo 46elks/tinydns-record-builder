@@ -190,19 +190,28 @@ def domainkeys(domain, keytype, key, ttl):
     key = key.replace('\r', '')
     if len(key) > 255:
         print(
-            "Warning: key is > 255 octets and won't fit inside a single TXT record!",
+            "Warning: key is > 255 octets and won't fit inside a single TXT record (splitting to multiple values)\n",
             file=sys.stderr
         )
-    line = 'v=DKIM1; k={keytype}; p={key}'.format(
-        keytype=keytype,
-        key=key
-    )
-    result = ':{domain}:16:{line}:{ttl}'.format(
-        domain=escape_text(domain),
-        line=oct_len(line) + escape_text(line),
-        ttl=ttl
-    )
-    return result
+
+    prefix = 'v=DKIM1; k={keytype}; p='.format(keytype=keytype)
+    chunk_length = 250 - len(prefix)
+    chunks = [key[i:i + chunk_length] for i in range(0, len(key), chunk_length)]
+
+    lines = list()
+    lines.append(prefix + chunks.pop(0))
+    for chunk in chunks:
+        lines.append(chunk)
+
+    results = list()
+    for line in lines:
+        results.append(':{domain}:16:{line}:{ttl}'.format(
+            domain=escape_text(domain),
+            line=oct_len(line) + escape_text(line),
+            ttl=ttl
+        ))
+
+    return '\n'.join(results)
 
 
 @cli('domain', ('order', int), ('preference', int), 'flag', 'services', 'regexp', 'replacement', ('ttl', int))
