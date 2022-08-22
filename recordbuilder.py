@@ -184,22 +184,33 @@ def domainkeys(domain, keytype, key, ttl):
         ttl -- time to live (int)
 
     Newlines (\\n) and carriage returns (\\r) are removed automatically from
-    the key.
+    the key. If the data is > 255 octets, it will be split into multiple strings
+    of at most 255 octets each.
     """
     key = key.replace('\n', '')
     key = key.replace('\r', '')
-    if len(key) > 255:
-        print(
-            "Warning: key is > 255 octets and won't fit inside a single TXT record!",
-            file=sys.stderr
-        )
     line = 'v=DKIM1; k={keytype}; p={key}'.format(
         keytype=keytype,
         key=key
     )
+    if len(line) > 255:
+        print(
+            "Warning: data is > 255 octets and will be split into multiple strings.",
+            file=sys.stderr
+        )
+        # split line into chunks of at most 255 octets each
+        chunks = [line[i:i+255] for i in range(0, len(line), 255)]
+        strings = []
+        for chunk in chunks:
+            strings.append(oct_len(chunk))
+            strings.append(escape_text(chunk))
+        line = "".join(strings)
+    else:
+        line = oct_len(line) + escape_text(line)
+
     result = ':{domain}:16:{line}:{ttl}'.format(
         domain=escape_text(domain),
-        line=oct_len(line) + escape_text(line),
+        line=line,
         ttl=ttl
     )
     return result
