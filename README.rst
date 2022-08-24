@@ -11,7 +11,7 @@ You can find some more information about each record type over there as well.
 The program requires Python >=3.5 as it makes use of
 ``ipaddress.IPv4Address.reverse_pointer`` (new in Python 3.5) in the ``aaaa``
 function. If you do not use that function you should get away with Python >=3.3,
-and if you remove ``import ipaddress``, any Py3K should be fine.
+and if you remove ``import ipaddress``, any Py3k should be fine.
 
 .. _buildRecord.cgi:
         https://andersbrownworth.com/projects/sysadmin/djbdnsRecordBuilder/buildRecord.txt
@@ -48,6 +48,6 @@ Usage
 
     Returns a generic AAAA record and a PTR record.
 
-    $ ./recordbuilder.py aaaa example.com 2606:2800:220:1:248:1893:25c8:1946 3600
-    :example.com:28:\046\006\050\000\002\040\000\001\002\110\030\223\045\310\031\106:3600
-    ^6.4.9.1.8.c.5.2.3.9.8.1.8.4.2.0.1.0.0.0.0.2.2.0.0.0.8.2.6.0.6.2.ip6.arpa:example.com:3600
+    $ ./recordbuilder.py aaaa example.net 2001:db8::ff00:42:8329 3600
+    :example.net:28:\040\001\015\270\000\000\000\000\000\000\377\000\000\102\203\051:3600
+    ^9.2.3.8.2.4.0.0.0.0.f.f.0.0.0.0.0.0.0.0.0.0.0.0.8.b.d.0.1.0.0.2.ip6.arpa:example.net:3600
