@@ -139,7 +139,8 @@ def aaaa(domain, address, ttl):
         domain=escape_text(domain),
         ttl=ttl
     )
-    return '{aaaa}\n{reverse_ptr}'.format(aaaa=aaaa, reverse_ptr=reverse_ptr)
+    result = '\n'.join([aaaa, reverse_ptr])
+    return result
 
 
 @cli('domain', 'flag', 'tag', 'value', ('ttl', int))
