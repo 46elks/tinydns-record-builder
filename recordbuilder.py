@@ -13,11 +13,8 @@ def cli(*cli_args):
         def wrapper(*args, **kwargs):
             return func(*args, **kwargs)
 
-        tupled_args = []
-        str_args = []
-        for arg in cli_args:
-            tupled_args.append(arg if isinstance(arg, tuple) else (arg, None))
-            str_args.append(arg[0] if isinstance(arg, tuple) else arg)
+        str_args = [arg[0] if isinstance(arg, tuple) else arg for arg in cli_args]
+        tupled_args = [arg if isinstance(arg, tuple) else (arg, None) for arg in cli_args]
 
         _cli_commands[func.__name__] = {
             'func': func,
